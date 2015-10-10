@@ -806,6 +806,7 @@ struct TomlTarget {
     doc: Option<bool>,
     plugin: Option<bool>,
     harness: Option<bool>,
+    features: Option<Vec<String>>,
 }
 
 #[derive(RustcDecodable, Clone)]
@@ -834,6 +835,7 @@ impl TomlTarget {
             doc: None,
             plugin: None,
             harness: None,
+            features: None
         }
     }
 
@@ -925,7 +927,7 @@ fn normalize(lib: &Option<TomlLibTarget>,
                 PathValue::Path(default(bin))
             });
             let mut target = Target::bin_target(&bin.name(), &path.to_path(),
-                                                None);
+                                                None, bin.features.clone());
             configure(bin, &mut target);
             dst.push(target);
         }
@@ -946,7 +948,8 @@ fn normalize(lib: &Option<TomlLibTarget>,
                 PathValue::Path(default(ex))
             });
 
-            let mut target = Target::example_target(&ex.name(), &path.to_path());
+            let mut target = Target::example_target(&ex.name(), &path.to_path(),
+                                                    ex.features.clone());
             configure(ex, &mut target);
             dst.push(target);
         }
@@ -965,7 +968,7 @@ fn normalize(lib: &Option<TomlLibTarget>,
             metadata.mix(&format!("test-{}", test.name()));
 
             let mut target = Target::test_target(&test.name(), &path.to_path(),
-                                                 metadata);
+                                                 metadata, test.features.clone());
             configure(test, &mut target);
             dst.push(target);
         }
@@ -985,7 +988,8 @@ fn normalize(lib: &Option<TomlLibTarget>,
 
             let mut target = Target::bench_target(&bench.name(),
                                                   &path.to_path(),
-                                                  metadata);
+                                                  metadata,
+                                                  bench.features.clone());
             configure(bench, &mut target);
             dst.push(target);
         }
