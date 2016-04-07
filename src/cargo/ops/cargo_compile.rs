@@ -153,11 +153,6 @@ pub fn compile_pkg<'a>(root_package: &Package,
         s.split(' ')
     }).map(|s| s.to_string()).collect::<Vec<String>>();
 
-    if spec.len() > 0 && (no_default_features || features.len() > 0) {
-        bail!("features cannot be modified when the main package \
-               is not being built");
-    }
-
     if jobs == Some(0) {
         bail!("jobs must be at least 1")
     }
