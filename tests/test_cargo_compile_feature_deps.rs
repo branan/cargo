@@ -18,7 +18,7 @@ test!(compile_simple_feature_deps {
 
             [[bin]]
             name = "foo"
-            features = ["a"]
+            required-features = ["a"]
         "#)
         .file("src/main.rs", "fn main() {}");
 
@@ -46,7 +46,7 @@ test!(compile_simple_feature_deps_args {
 
             [[bin]]
             name = "foo"
-            features = ["a"]
+            required-features = ["a"]
         "#)
         .file("src/main.rs", "fn main() {}");
 
@@ -73,12 +73,12 @@ test!(compile_multiple_feature_deps {
             [[bin]]
             name = "foo_1"
             path = "src/foo_1.rs"
-            features = ["b", "c"]
+            required-features = ["b", "c"]
 
             [[bin]]
             name = "foo_2"
             path = "src/foo_2.rs"
-            features = ["a"]
+            required-features = ["a"]
         "#)
         .file("src/foo_1.rs", "fn main() {}")
         .file("src/foo_2.rs", "fn main() {}");
