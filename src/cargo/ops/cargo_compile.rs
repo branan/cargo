@@ -495,6 +495,7 @@ fn scrape_target_config(config: &Config, triple: &str)
         let mut output = BuildOutput {
             library_paths: Vec::new(),
             library_links: Vec::new(),
+            codegen_opts: Vec::new(),
             cfgs: Vec::new(),
             metadata: Vec::new(),
             rerun_if_changed: Vec::new(),

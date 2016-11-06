@@ -377,6 +377,9 @@ fn rustc(cx: &mut Context, unit: &Unit) -> CargoResult<Work> {
                         rustc.arg("-l").arg(name);
                     }
                 }
+                for opt in &output.codegen_opts {
+                    rustc.arg("-C").arg(opt);
+                }
             }
         }
         Ok(())

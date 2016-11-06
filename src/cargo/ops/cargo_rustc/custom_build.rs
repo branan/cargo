@@ -18,6 +18,8 @@ pub struct BuildOutput {
     pub library_paths: Vec<PathBuf>,
     /// Names and link kinds of libraries, suitable for the `-l` flag
     pub library_links: Vec<String>,
+    /// Linker flags to be passed along from rustc
+    pub codegen_opts: Vec<String>,
     /// Various `--cfg` flags to pass to the compiler
     pub cfgs: Vec<String>,
     /// Metadata to pass to the immediate dependencies
@@ -283,6 +285,7 @@ impl BuildOutput {
     pub fn parse(input: &[u8], pkg_name: &str) -> CargoResult<BuildOutput> {
         let mut library_paths = Vec::new();
         let mut library_links = Vec::new();
+        let mut codegen_opts = Vec::new();
         let mut cfgs = Vec::new();
         let mut metadata = Vec::new();
         let mut rerun_if_changed = Vec::new();
@@ -322,6 +325,10 @@ impl BuildOutput {
                     library_links.extend(links.into_iter());
                     library_paths.extend(libs.into_iter());
                 }
+                "rustc-codegen-opts" => {
+                    let opts : Vec<_> = value.split(",").map(|s| s.to_owned()).collect();
+                    codegen_opts.extend(opts);
+                }
                 "rustc-link-lib" => library_links.push(value.to_string()),
                 "rustc-link-search" => library_paths.push(PathBuf::from(value)),
                 "rustc-cfg" => cfgs.push(value.to_string()),
@@ -334,6 +341,7 @@ impl BuildOutput {
         Ok(BuildOutput {
             library_paths: library_paths,
             library_links: library_links,
+            codegen_opts: codegen_opts,
             cfgs: cfgs,
             metadata: metadata,
             rerun_if_changed: rerun_if_changed,
